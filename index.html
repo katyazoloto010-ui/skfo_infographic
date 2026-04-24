@@ -388,6 +388,52 @@
       font-size: 14px;
     }
 
+    .slider {
+      position: relative;
+      max-width: 800px;
+      margin: 0 auto;
+      overflow: hidden;
+      border-radius: 30px;
+    }
+
+    .slider-track {
+      display: flex;
+      transition: transform 0.5s ease;
+    }
+
+    .slide {
+      min-width: 100%;
+      height: 400px;
+      display: flex;
+      align-items: flex-end;
+    }
+
+    .slide img {
+      width: 100%;
+      display: block;
+      object-fit: cover;
+    }
+
+    .slider-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      padding: 10px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+
     @media (max-width:980px) {
 
       .stats,
@@ -604,8 +650,7 @@
 
       <div class="regions-grid">
         <article class="card region">
-          <div class="photo"
-            style="background-image:url('media/dagestan.jpg');">
+          <div class="photo" style="background-image:url('media/dagestan.jpg');">
           </div>
           <div class="body">
             <h3>Дагестан</h3>
@@ -620,8 +665,7 @@
         </article>
 
         <article class="card region">
-          <div class="photo"
-            style="background-image:url('media/chechnya.jpg');">
+          <div class="photo" style="background-image:url('media/chechnya.jpg');">
           </div>
           <div class="body">
             <h3>Чеченская Республика</h3>
@@ -636,8 +680,7 @@
         </article>
 
         <article class="card region">
-          <div class="photo"
-            style="background-image:url('media/ingushetiya.jpg'); background-position: top;">
+          <div class="photo" style="background-image:url('media/ingushetiya.jpg'); background-position: top;">
           </div>
           <div class="body">
             <h3>Ингушетия</h3>
@@ -652,8 +695,7 @@
         </article>
 
         <article class="card region">
-          <div class="photo"
-            style="background-image:url('media/kabardino-balkaria.webp'); background-position: top;">
+          <div class="photo" style="background-image:url('media/kabardino-balkaria.webp'); background-position: top;">
           </div>
           <div class="body">
             <h3>Кабардино-Балкария</h3>
@@ -684,8 +726,7 @@
         </article>
 
         <article class="card region">
-          <div class="photo"
-            style="background-image:url('media/alaniya.webp'); background-position: top;">
+          <div class="photo" style="background-image:url('media/alaniya.webp'); background-position: top;">
           </div>
           <div class="body">
             <h3>Северная Осетия — Алания</h3>
@@ -700,8 +741,7 @@
         </article>
 
         <article class="card region">
-          <div class="photo"
-            style="background-image:url('media/stavropol.webp');">
+          <div class="photo" style="background-image:url('media/stavropol.webp');">
           </div>
           <div class="body">
             <h3>Ставропольский край</h3>
@@ -746,7 +786,76 @@
         </div>
       </div>
     </section>
+    <section class="section">
+      <div class="slider">
+        <button class="slider-btn prev" style="transform: translateY(-50%) rotate(180deg);">✈</button>
+
+        <div class="slider-track">
+          <div class="slide active"><img src="media/lada.jpg" alt=""></div>
+          <div class="slide"> <img src="media/lada1.jpg" alt=""></div>
+          <div class="slide"> <img src="media/lada2.jpg" alt=""></div>
+          <div class="slide"> <img src="media/lada3.jpg" alt=""></div>
+          <div class="slide"> <img src="media/lada4.jpg" alt=""></div>
+          <div class="slide"> <img src="media/lada5.jpg" alt=""></div>
+        </div>
+
+        <button class="slider-btn next">✈︎</button>
+      </div>
+    </section>
   </main>
+  <script>
+    const track = document.querySelector('.slider-track');
+    const slides = document.querySelectorAll('.slide');
+
+    const nextBtn = document.querySelector('.next');
+    const prevBtn = document.querySelector('.prev');
+
+    let index = 1;
+
+    // КЛОНИРУЕМ первый и последний слайды
+    const firstClone = slides[0].cloneNode(true);
+    const lastClone = slides[slides.length - 1].cloneNode(true);
+
+    track.appendChild(firstClone);
+    track.insertBefore(lastClone, slides[0]);
+
+    const allSlides = document.querySelectorAll('.slide');
+
+    // стартовая позиция (первый настоящий слайд)
+    track.style.transform = `translateX(-${index * 100}%)`;
+
+    function moveToSlide() {
+      track.style.transition = "transform 0.5s ease";
+      track.style.transform = `translateX(-${index * 100}%)`;
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (index >= allSlides.length - 1) return;
+      index++;
+      moveToSlide();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      if (index <= 0) return;
+      index--;
+      moveToSlide();
+    });
+
+    // Логика "бесшовности"
+    track.addEventListener('transitionend', () => {
+      if (allSlides[index] === firstClone) {
+        track.style.transition = "none";
+        index = 1;
+        track.style.transform = `translateX(-${index * 100}%)`;
+      }
+
+      if (allSlides[index] === lastClone) {
+        track.style.transition = "none";
+        index = allSlides.length - 2;
+        track.style.transform = `translateX(-${index * 100}%)`;
+      }
+    });
+  </script>
 </body>
 
 </html>
